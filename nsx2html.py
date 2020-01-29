@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+import argparse
 import re
 import sys
 import time
@@ -30,15 +30,20 @@ def sanitise_path_string(path_str):
 
     return path_str[:240]
 
+parser = argparse.ArgumentParser(description='Process args')
+parser.add_argument('files', nargs='*')
+parser.add_argument('-f', '--folder', metavar='folder', help="pass in optional folder name")
+args = parser.parse_args()
 
-work_path = Path.cwd()
+folder = Path(args.folder or '')
+
+work_path = Path.cwd() / folder
 media_dir_name = sanitise_path_string(media_dir_name)
 
+files_to_convert = [work_path / path for path in args.files]
 
-if len(sys.argv) > 1:
-    files_to_convert = [Path(path) for path in sys.argv[1:]]
-else:
-    files_to_convert = Path(work_path).glob('*.nsx')
+if not files_to_convert:
+    files_to_convert = work_path.glob('*.nsx')
 
 if not files_to_convert:
     print('No .nsx files found')

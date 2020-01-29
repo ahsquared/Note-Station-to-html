@@ -1,0 +1,10 @@
+version: "3.5"
+
+services:
+  nsx2:
+    build: .
+    volumes:
+      - ".:/nsx2"
+    entrypoint:
+      - python
+      - ./nsx2html.py
